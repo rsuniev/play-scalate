@@ -1,0 +1,8 @@
+<html>
+<title>Hello</title>
+<h1>Hello ${name}!!!!</h1>
+<p>request ${request}</p>
+<p>params ${params}</p>
+<p>flash ${flash}</p>
+<p>session ${session}</p>
+</html>

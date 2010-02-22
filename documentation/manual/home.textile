@@ -1,0 +1,70 @@
+h1. Scalate support
+
+"Scalate":http://scalate.fusesource.org/ is a template engine written in scala. It supports two dialects: ssp (jsp for scala) and shaml (haml for scala). Play provides integration for both via a special Controller class. 
+
+h2. Getting started
+
+first you need to grab the release from the modules repository:
+
+bc. play install scalate
+
+
+h3. Starting a New Project
+
+then if you start a new project all you need to do is:
+
+bc. play new myapp --with scala,scalate
+
+
+h3. Existing Projects
+
+or if you want to configure an existing project, you will need to edit your conf/application.conf:
+
+bc. module.scalate=${play.path}/modules/scalate-head
+
+and set the dialect:
+
+bc. scalate=ssp
+
+or 
+
+bc. scalate=shaml
+
+then you will also need to increase the heap size:
+
+bc. jvm.memory=-Xmx256M,-Xms32M
+
+p(note). optionally, you can ignore certain locations by adding scalate.ignore setting. For example: scalate.ignore=/MyController will render MyController with the standard template engine while everything else is still handled by Scalate. Worth noting that an external module with separate routes like the CRUD module will be rendered with the standard templating language since an external module does not inherit from scalate.Controller
+
+finally you will need to change your controllers to inherit from play.mvc.scalate.Controller
+
+
+
+h2. Example
+
+bc. object Application extends scalate.Controller  {
+    def index(name: String = "Guest user") = render(name)
+}
+
+
+if the method above is invoked, play will render app/views/Application/index.ssp with the following context variables already populated:
+* name
+* request
+* flash
+* session
+* parameters
+
+
+
+h2. Differences between production and dev mode
+
+in dev mode, play will alow instant template reloading, that is, if you make a change to a template and refresh the page, the change will apear. In production, however, template reloading is disabled for performance reasons.
+
+
+
+h2. TODO
+add reverse url and layout support 
+
+
+
+
