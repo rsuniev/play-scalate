@@ -1,4 +1,4 @@
-package play.mvc.scalate
+package play.mvc
 
 import play.mvc.Http.{Request,Response}
 import play.mvc.results.Result
@@ -10,7 +10,7 @@ private[play] class ScalateResult(content:String,template:String) extends Result
 
  def apply(request:Request, response:Response) = {
      try {
-            Result.setContentTypeIfNotSet(response, MimeTypes.getContentType(template, "text/plain"))
+            setContentTypeIfNotSet(response, MimeTypes.getContentType(template, "text/plain"))
             response.out.write(content.getBytes("utf-8"))
         } catch {
             case e:Exception => throw new UnexpectedException(e)

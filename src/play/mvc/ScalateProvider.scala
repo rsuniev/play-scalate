@@ -9,9 +9,9 @@ import java.io.{StringWriter,PrintWriter}
 import scala.collection.JavaConversions._
 import java.io.File
 import org.fusesource.scalate.util.SourceCodeHelper
-import play.mvc.scalate.ScalateResult
 
-private[mvc] object ScalateSupport  {
+
+private[mvc] trait ScalateProvider  {
 
   // Create and configure the Scalate template engine
   val engine = new TemplateEngine
@@ -76,7 +76,6 @@ private[mvc] object ScalateSupport  {
     context.attributes += "request" -> Http.Request.current.get
     context.attributes += "flash" -> Scope.Flash.current()
     context.attributes += "params" ->  Scope.Params.current.get
-    //TODO add reverse url support
     try {
        context.attributes +="errors" -> Validation.errors()
     } catch { case ex:Exception => throw new UnexpectedException(ex)}
@@ -115,3 +114,5 @@ private[mvc] object ScalateSupport  {
      (if (Http.Request.current().format == null)  "html" else Http.Request.current().format)
   }
 }
+private[mvc] object ScalateProvider extends ScalateProvider
+
