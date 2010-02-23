@@ -34,16 +34,14 @@ then you will also need to increase the heap size:
 
 bc. jvm.memory=-Xmx256M,-Xms32M
 
-p(note). optionally, you can ignore certain locations by adding scalate.ignore setting. For example: scalate.ignore=/MyController will render MyController with the standard template engine while everything else is still handled by Scalate. Worth noting that an external module with separate routes like the CRUD module will be rendered with the standard templating language since an external module does not inherit from scalate.Controller
-
-finally you will need to change your controllers to inherit from play.mvc.scalate.Controller
+finally you will need to change your controllers to inherit from play.mvc.ScalateController
 
 
 
 h2. Example
 
 bc. object Application extends ScalateController  {
-    def index(name: String = "Guest user") = render(name)
+    def index(name: String = "Guest user") = renderScalate(name)
 }
 
 
