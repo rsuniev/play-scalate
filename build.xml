@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Scalate" default="build" basedir=".">
+<project name="Scalate" default="test" basedir=".">
 
     <path id="project.classpath">
         <pathelement path="${play.path}/framework/classes"/>
@@ -10,18 +10,35 @@
         <fileset dir="lib">
             <include name="*.jar"/>                        
         </fileset> 
+        <pathelement path="tmp/testclasses"/>
     </path>
-    
-    <target name="build">
+
+		<target name="test" depends="compile,test-run" />
+		<target name="test-run">
+		    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+				      <classpath refid="project.classpath"/>
+				</taskdef>
+				<scalatest runpath="tmp/testclasses"  haltonfailure="true" />
+		</target>
+
+    <target name="build" depends="compile"> 
+        <delete dir="tmp" />
+		</target>
+    <target name="compile">
         <taskdef resource="scala/tools/ant/antlib.xml">
             <classpath refid="project.classpath" />
         </taskdef>
         
         <mkdir dir="tmp/classes" />
+        <mkdir dir="tmp/testclasses" />
         
         <scalac srcdir="src" destdir="tmp/classes" force="changed">
             <classpath refid="project.classpath" />
-					</scalac>
+				</scalac>
+
+        <scalac srcdir="test" destdir="tmp/testclasses" force="changed">
+            <classpath refid="project.classpath" />
+				</scalac>
 
         <javac srcdir="src" destdir="tmp/classes" debug="true">
             <classpath refid="project.classpath" />
@@ -44,7 +61,6 @@
             </manifest>
         </jar>
         
-        <delete dir="tmp" />
     </target>
     
 </project>

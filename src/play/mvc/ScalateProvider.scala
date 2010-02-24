@@ -13,19 +13,23 @@ import org.fusesource.scalate.util.SourceCodeHelper
 
 private[mvc] trait ScalateProvider  {
 
-  // Create and configure the Scalate template engine
-  val engine = new TemplateEngine
-  engine.workingDirectory = new File(System.getProperty("java.io.tmpdir"), "scalate")
-  engine.bindings = List(
-    Binding("session", SourceCodeHelper.name(classOf[Scope.Session])),
-    Binding("request", SourceCodeHelper.name(classOf[Http.Request])),
-    Binding("flash", SourceCodeHelper.name(classOf[Scope.Flash])),
-    Binding("params", SourceCodeHelper.name(classOf[Scope.Params]))
-  )
-  if (Play.mode == Play.Mode.PROD) {
-    engine.allowReload = false
+  def init:TemplateEngine = {
+    val engine = new TemplateEngine
+    engine.workingDirectory = new File(System.getProperty("java.io.tmpdir"), "scalate")
+    engine.bindings = List(
+      Binding("session", SourceCodeHelper.name(classOf[Scope.Session])),
+      Binding("request", SourceCodeHelper.name(classOf[Http.Request])),
+      Binding("flash", SourceCodeHelper.name(classOf[Scope.Flash])),
+      Binding("params", SourceCodeHelper.name(classOf[Scope.Params]))
+    )
+    if (Play.mode == Play.Mode.PROD) {
+      engine.allowReload = false
+    }
+    engine.resourceLoader = new FileResourceLoader(Some(new File(Play.applicationPath+"/app/views")))
+    engine
   }
-  engine.resourceLoader = new FileResourceLoader(Some(new File(Play.applicationPath+"/app/views")))
+  val engine = init
+  // Create and configure the Scalate template engine
   
   def renderOrProvideTemplate(args:Seq[AnyRef]):Option[String] = {
     //determine template
